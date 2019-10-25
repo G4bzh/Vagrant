@@ -5,7 +5,7 @@ apt-get update -y
 apt-get install -y  apache2 mariadb-server php libapache2-mod-php php-mysql php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip
 mysql --user=root <<EOF
 CREATE DATABASE wordpress;
-GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'localhost' IDENTIFIED BY 'W0rdPr3sspA55w0r2';
+GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'localhost' IDENTIFIED BY '';
 FLUSH PRIVILEGES;
 EOF
 cat <<EOF > /etc/ssl/certs/veryfrog.crt
@@ -68,7 +68,11 @@ cat <<EOF > /etc/apache2/sites-available/wordpress.conf
      ServerAdmin admin@example.com
      DocumentRoot /var/www/html/wordpress/
      ServerName www.veryfrog.com
-     ServerAlias www.veryfrog.com
+     ServerAlias veryfrog.com
+     ServerAlias veryfrog.fr
+     ServerAlias veryfrog.net
+     ServerAlias www.veryfrog.fr
+     ServerAlias www.veryfrog.net
 
      SSLEngine on
      SSLCertificateFile    /etc/ssl/certs/veryfrog.crt
@@ -96,7 +100,7 @@ touch wordpress/.htaccess
 cp wordpress/wp-config-sample.php wordpress/wp-config.php
 sed -i 's/database_name_here/wordpress/' wordpress/wp-config.php
 sed -i 's/username_here/wordpress/' wordpress/wp-config.php
-sed -i 's/password_here/W0rdPr3sspA55w0r2/' wordpress/wp-config.php
+sed -i 's/password_here//' wordpress/wp-config.php
 mkdir wordpress/wp-content/upgrade
 cp -a wordpress/. /var/www/html/wordpress
 find /var/www/html/wordpress/ -type d -exec chmod 750 {} \;
