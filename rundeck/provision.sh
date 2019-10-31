@@ -2,9 +2,11 @@
 echo "Provisionning VM..."
 sudo su -
 apt-get update
-apt-get install -y curl
+apt-get install -y curl apt-transport-https ca-certificates wget dirmngr gnupg software-properties-common
 echo "deb https://rundeck.bintray.com/rundeck-deb /" | sudo tee -a /etc/apt/sources.list.d/rundeck.list
-curl 'https://bintray.com/user/downloadSubjectPublicKey?username=bintray' | su do apt-key add -
+wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public |  apt-key add -
+curl 'https://bintray.com/user/downloadSubjectPublicKey?username=bintray' | apt-key add -
+add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/
 apt-get update
 apt-get install rundeck -y
 apt-get install mariadb-server -y
@@ -18,4 +20,7 @@ echo "dataSource.url = jdbc:mysql://localhost/rundeck?autoReconnect=true&useSSL=
 echo "dataSource.username=rundeck" >> /etc/rundeck/rundeck-config.properties
 echo "dataSource.password=rundeck" >> /etc/rundeck/rundeck-config.properties
 echo "dataSource.driverClassName=com.mysql.jdbc.Driver" >> /etc/rundeck/rundeck-config.properties
-systemctl restart rundeckd.service
+apt-get install adoptopenjdk-8-hotspot -y
+echo "RUN update-alternatives --config java"
+echo "CHOOSE openjdk 8"
+echo "THEN systemctl restart rundeckd.service"
